@@ -22,17 +22,17 @@ public class Main {
         saveGameProgress(save3, "save3", saves);
 
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(USERPATH + "savegames/" + ZIPFILE))) {
-            FileInputStream fileInputStream = new FileInputStream(USERPATH + saves.get(0)); //читаем в поток первый файл из списка
 
             //По одному файлу из списка добавляем в архив
             for (String saveFile : saves) {
+                FileInputStream fileInputStream = new FileInputStream(USERPATH + "savegames/" + saveFile);
                 zipOutputStream.putNextEntry(new ZipEntry(saveFile));
                 addToZip(fileInputStream, zipOutputStream);
                 System.out.println("Файл " + saveFile + " добавлен в архив.");
             }
             // Удаление файлов вне архива
             for (String saveFile : saves) {
-                File file = new File(USERPATH + saveFile);
+                File file = new File(USERPATH + "savegames/" + saveFile);
                 file.delete();
                 System.out.println("Файл " + saveFile + " удалён.");
             }
@@ -53,7 +53,7 @@ public class Main {
     }
 
     private static void saveGameProgress(GameProgress save, String nameSaveGame, List<String> saves) {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(USERPATH + nameSaveGame + TYPEFILE)) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(USERPATH + "savegames/" + nameSaveGame + TYPEFILE)) {
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
             outputStream.writeObject(save);
             saves.add(nameSaveGame + TYPEFILE);
